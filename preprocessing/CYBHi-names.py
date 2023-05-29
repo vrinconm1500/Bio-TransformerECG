@@ -42,10 +42,10 @@ from scipy.stats import pearsonr
 
 import matplotlib
 
-df1 = pd.read_csv("data/raw/CYBHi/data/long-term-csv/patient_RA_1.csv", sep=",")
+df1 = pd.read_csv("data/raw/CYBHi/data/short-term-csv/patient_SM_1.csv", sep=",")
 df2 = pd.read_csv("data/raw/CYBHi/data/long-term-csv/patient_RA_2.csv")
 
-filtered1 = df1['0'].values
+filtered1 = df1['3'].values
 filtered2 = df2['0'].values
 sgs = np.concatenate((sgs, filtered))
 
@@ -96,17 +96,17 @@ def segment_signals(sig, r_peaks_annot, bmd=True, normalization=True):
     return segmented_signals, r_peaks
 
 #Perform QRS detection
-ecgOut = ecg.ecg(signal=a, sampling_rate=1000., show=True,interactive=False)[4]
+ecgOut = ecg.ecg(signal=filtered1, sampling_rate=1000., show=True,interactive=False)#[4]
 
 peaks = ecgOut["rpeaks"]
 wavess= ecgOut["templates"]
 
 
 
-waves, pks = segment_signals(a, peaks, False, True)
+waves, pks = segment_signals(filtered1, peaks, False, True)
 
 
-plt.plot(ecgOut)
+plt.plot(wavess[25])
 length = len(waves)
 
 for k in range(length):
@@ -248,11 +248,111 @@ for patient in patients:
 
 #Short - TERM 
 
-df1 = pd.read_csv("20110715-MLS-A1-8B.txt",sep="\t")
 
-df = pd.read_csv("20110715-MLS-A2-8B.txt", sep="\t", skiprows=8, header=None)
 
-datos = df[3].values
+
+
+import os
+import pandas as pd
+
+data_path = "raw/CYBHi/data/short-term"
+
+nombres = []  #creamos una variable listado vacia para guardar los nombres
+numero = []   #creamos una variable listado vacia para guardar el identificador de las lecturas
+# Recorre todos los archivos TXT en la carpeta de datos de largo plazo
+for filename in os.listdir(data_path):
+    if filename.endswith(".txt"):
+        file_path = os.path.join(data_path, filename)
+        ecg_df = pd.read_csv(file_path, sep="\t", skiprows=8, header=None)[3]
+        #ecg_df = ecg_df.iloc[6:, 0]
+        nombres.append(filename) #guardamos cada nombre de archivo del directo destino en esta variable
+        item = filename[9:]
+        div = item.split("-",maxsplit=1)
+        
+        if div[0]+"_1" in numero:
+            numero.append(div[0]+"_2")
+            csv_name = "patient_" + div[0]+"_2" + ".csv"
+            print(csv_name)
+            ecg_df.to_csv(os.path.join(data_path, csv_name), index=False, )
+        
+        else:
+            
+            numero.append(div[0]+"_1")  # guardamos el numero del archivo
+            csv_name = "patient_" + div[0]+"_1" + ".csv"
+            print(csv_name)
+            ecg_df.to_csv(os.path.join(data_path, csv_name), index=False)
+
+
+
+
+
+
+import os
+import pandas as pd
+
+data_path = "raw/CYBHi/data/short-term"  # Especifica la ruta de tus archivos TXT
+output_path = "raw/CYBHi/data/short-term-csv"  # Especifica la ruta para guardar los archivos CSV
+
+def procesar_archivo(file_path, paciente, identificador):
+    ecg_df = pd.read_csv(file_path, sep="\t", skiprows=8, header=None)[3]
+    csv_name = f"patient_{paciente}_{identificador}.csv"
+    csv_path = os.path.join(output_path, csv_name)
+    ecg_df.to_csv(csv_path, index=False, )
+    print(f"Archivo CSV guardado: {csv_name}")
+
+# Obtener la lista de archivos TXT
+archivos_txt = [filename for filename in os.listdir(data_path) if filename.endswith(".txt")]
+archivos_txt.sort()
+
+
+identificadores = ["1", "2", "3", "4", "5", "6"]
+
+for i, filename in enumerate(archivos_txt):
+    item = filename[9:]  # Obtener las iniciales del paciente del nombre del archivo
+    div = item.split("-",maxsplit=1)
+    paciente = div[0]
+    identificador = identificadores[i % len(identificadores)]  # Asignar el identificador de forma automática
+    
+    file_path = os.path.join(data_path, filename)
+    print(file_path)
+    procesar_archivo(file_path, paciente, identificador)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import numpy as np
+unique, counts = np.unique(nombres, return_counts=True)
+
+result = np.column_stack((unique, counts)) 
+print (result)
+
+
+
+df1 = pd.read_csv("data/raw/CYBHi/data/cybhi-lst-csv/patient_AA_1.csv", names="Hola")
+
+df = pd.read_csv("data/raw/CYBHi/data/short-term/20110715-MLS-A1-8B.txt", sep="\t", skiprows=8, header=None)[3]
+
+serie = df1.squeeze()
+
+try:
+    datos = df1["0"].values 
+    
+except:
+    datos = df1["3"].values 
 
 
 fig = plt.figure(figsize=(15,8))
@@ -299,6 +399,70 @@ plt.plot(filtered_ecg)
 plt.title('Señal de ECG filtrada')
 plt.tight_layout()
 plt.show()
+
+
+
+import numpy as np
+import pandas as pd
+
+dataframe = pd.read_csv("data/raw/CYBHi/data/short-term/20110715-MLS-A1-8B.txt", sep="\t", skiprows=8, header=None)
+
+
+
+
+import pandas as pd
+import numpy as np
+from scipy.signal import firwin, lfilter
+
+def preprocess_signal(ecg_data):
+    # Low pass filter
+    Fs = 500
+    Fstop = 120
+    Fpass = 90
+    Dstop = 0.0001
+    Dpass = 0.05
+    N = int(np.ceil((4 / Dstop)))
+    b = firwin(N, Fpass, fs=Fs, pass_zero=True)
+    ecg_data = lfilter(b, 1, ecg_data)
+    
+    # Filter out 50 Hz
+    Fpass1 = 48
+    Fstop = 50
+    Fpass2 = 52
+    N = int(np.ceil((4 / Dstop)))
+    bands = [0, Fpass1, Fstop, Fpass2, Fs / 2]
+    desired = [1, 1, 0, 1, 1]
+    b = firwin(N, bands, fs=Fs, pass_zero=False, window='hamming', scale='linear')
+    ecg_data = lfilter(b, 1, ecg_data)
+    
+    # High pass filter (remove signal wandering)
+    Fstop = 0.1
+    Fpass = 0.7
+    Dstop = 0.0001
+    Dpass = 0.05
+    N = int(np.ceil((4 / Dstop)))
+    b = firwin(N, Fpass, fs=Fs, pass_zero=False)
+    ecg_data = lfilter(b, 1, ecg_data)
+    
+    return ecg_data
+
+file_path = "data/raw/CYBHi/data/short-term/20110715-MLS-A1-8B.txt"
+
+data = pd.read_csv("data/raw/CYBHi/data/short-term/20110715-MLS-A1-8B.txt", sep="\t", skiprows=8, header=None)[3]
+data = data.values
+
+
+filtered_signal = preprocess_signal(data)
+
+
+new_data = np.zeros((5000, 12))
+for j in range(12):
+    ecg_signal = data[:, j]
+    filtered_signal = preprocess_signal(ecg_signal)
+    new_data[:, j] = filtered_signal[1001:6001]
+
+output_file_path = "path/to/your/output/preprocessed_file.csv"
+pd.DataFrame(new_data).to_csv(output_file_path, index=False)
 
 
 
