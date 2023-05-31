@@ -8,7 +8,7 @@ import random
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
-from keras.models import  load_model
+
 
 def load_data(where):
     with open(where, "rb") as pickleIn:
