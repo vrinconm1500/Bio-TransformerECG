@@ -1,5 +1,5 @@
-# Author: Axel Mukwena
-# ECG Biometric Authentication using CNN
+# Author: Víctor Rincon
+# ECG Biometric Authentication using Transformers
 
 import os
 import pickle
@@ -99,7 +99,7 @@ class GetFeatures:
                     for item in os.listdir(folder):
                         if item[-4:] == ".csv":
                             files.append(folder + item)
-                            print(files)
+                    print(files)
                 except FileNotFoundError:
                     continue
                             
@@ -113,6 +113,28 @@ class GetFeatures:
                 folder = os.path.expanduser("data/raw/CYBHi/data/long-term-csv/")
                 files = [folder + "patient_" + person + "_1.csv", folder + "patient_" + person + "_2.csv"]
 
+            elif self.where == "CYBHi_short":
+                folder = os.path.expanduser("data/raw/CYBHi/data/short-term-csv/")
+                files = [folder + "patient_" + person + "_1.csv", 
+                         folder + "patient_" + person + "_2.csv",
+                         folder + "patient_" + person + "_3.csv",
+                         folder + "patient_" + person + "_4.csv",
+                         folder + "patient_" + person + "_5.csv",
+                         folder + "patient_" + person + "_6.csv"]
+           
+            elif self.where == "CYBHi_lst":
+                try:
+                    
+                    folder = os.path.expanduser("data/raw/CYBHi/data/cybhi-lst-csv/")
+                    files = []
+                    for item in os.listdir(folder):
+                        if item[-4:] == ".csv":
+                            files.append(folder + item)
+                    files.sort()
+                    print(files)
+                except FileNotFoundError:
+                    continue
+                
             else:  # bmd
                 files = ["data/raw/bmd101/csv/" + person + ".csv"]
 
@@ -120,7 +142,8 @@ class GetFeatures:
             for file in files:
                 with open(file, 'r') as f:
                     features = pd.read_csv(f)
-                filtered = features['0'].values
+                #filtered = features['3'].values
+                filtered = features.squeeze()
                 sgs = np.concatenate((sgs, filtered))
 
             self.segment(np.array(sgs))

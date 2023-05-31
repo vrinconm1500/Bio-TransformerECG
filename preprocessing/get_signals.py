@@ -20,7 +20,7 @@ from features import GetFeatures
 from setup import Setup
 import os
 import pandas as pd 
-
+import numpy as np
 
 # Base de datos ECGID 
 
@@ -186,18 +186,13 @@ su.load_signals(290, "fantasia_290", fantasia[:40], 0)
 ###### CYBHi long term 
 
 
-CYBHi = ['RA', 'MP', 'ARA', 'MJR', 'JM', 'MGA', 'MA', 'JP', 'MB', 'AC', 'CF', 
-         'FP', 'IC', 'ABD', 'SF', 'JV', 'CB', 'FP', 'JM', 'PMA', 'JPA', 'SR', 
-         'JA', 'FM', 'ARA', 'AG', 'VO', 'JN', 'IB', 'MGA', 'MJR', 'DS', 'FO', 
-         'RD', 'RAA', 'TC', 'JS', 'TV', 'JPA', 'JCA', 'JA', 'CB', 'AL', 'AC', 
-         'CF', 'RL', 'MMJ', 'JL', 'PMA', 'JCA', 'IC', 'AA', 'CSR', 'AG', 'RF', 
-         'HF', 'JB', 'ARL', 'ABD', 'AR', 'IB', 'MB', 'RF', 'ACA', 'RA', 'MP', 
-         'JP', 'JSA', 'DB', 'SR', 'RAA', 'DC', 'JCC', 'FM', 'TF', 'PM', 'PES', 
-         'VO', 'ARF', 'MQ', 'RRA', 'SF', 'GF', 'MC', 'ACA', 'JSA', 'MQ', 'VM', 
-         'JL', 'TC', 'PES', 'MMJ', 'JC', 'AFS', 'TF', 'JCC', 'TV', 'ARL', 'JS', 
-         'JB', 'MA', 'GF', 'VM', 'FO',   'AR',  'DC', 'CSR', 'RR', 'DS', 'MBA', 
-         'AL', 'RD', 'AFS', 'MBA', 'JV', 'RR', 'MC', 'JC', 'RRA', 'HF', 'AA', 
-         'ARF', 'RL', 'DB', 'PM', 'JN']
+CYBHi = ['AA', 'ABD', 'AC', 'ACA', 'AFS', 'AG', 'AL', 'AR', 'ARA', 'ARF',
+       'ARL', 'CB', 'CF', 'CSR', 'DB', 'DC', 'DS', 'FM', 'FO', 'FP', 'GF',
+       'HF', 'IB', 'IC', 'JA', 'JB', 'JC', 'JCA', 'JCC', 'JL', 'JM', 'JN',
+       'JP', 'JPA', 'JS', 'JSA', 'JV', 'MA', 'MB', 'MBA', 'MC', 'MCC',
+       'MGA', 'MJR', 'MMJ', 'MP', 'MQ', 'PES', 'PM', 'PMA', 'RA', 'RAA',
+       'RD', 'RF', 'RL', 'RR', 'RRA', 'SF', 'SR', 'TC', 'TF', 'TV', 'VM',
+       'VO']
 
 
 
@@ -209,4 +204,98 @@ feats.features('CYBHi', CYBHi)
 su = Setup()
 su.load_signals(290, "CYBHi-290", CYBHi[:126], 0)
 
+
+
+
+
+
+
+#### CYBHi short-Term
+
+CYBHi_short = ['AJR', 'ALM', 'AMA', 'ARL', 'ARS', 'AS', 'ASN', 'AV', 'CB',
+       'CC', 'CGP', 'CIB', 'CO', 'DPC', 'DS', 'DT', 'EP', 'ES', 'FAC',
+       'FC', 'GD', 'GFN', 'GM', 'HPS', 'IA', 'JC', 'JF', 'JG', 'JL',
+       'JMDA', 'JMF', 'JN', 'JS', 'JTA', 'JTP', 'JV', 'LCR', 'LDS', 'LGM',
+       'LR', 'LSM', 'MB', 'MC', 'MLS', 'MNM', 'MR', 'MRN', 'MVA', 'NF',
+       'NPS', 'PC', 'PLC', 'PLN', 'PME', 'RCN', 'RMAF', 'RN', 'RSB', 'SM',
+       'SMS', 'SS', 'TCO', 'TMM', 'VRR', 'XZ']
+
+feats = GetFeatures()
+feats.features('CYBHi_short', CYBHi_short)
+
+
+su = Setup()
+su.load_signals(1500, "CYBHi_short-1500", CYBHi_short[:65], 0)
+
+
+with open("data/raw/CYBHi/data/short-term-csv/patient_AJR_1.csv", 'r') as f:
+    features = pd.read_csv(f)
+    filtered = features.values
+    #sgs = np.concatenate((sgs, filtered))
+    
+    
+    
+    
+
+##############  CYBHi LST 
+
+
+CYBHi = ['AA', 'ABD', 'AC', 'ACA', 'AFS', 'AG', 'AL', 'AR', 'ARA', 'ARF',
+       'ARL', 'CB', 'CF', 'CSR', 'DB', 'DC', 'DS', 'FM', 'FO', 'FP', 'GF',
+       'HF', 'IB', 'IC', 'JA', 'JB', 'JC', 'JCA', 'JCC', 'JL', 'JM', 'JN',
+       'JP', 'JPA', 'JS', 'JSA', 'JV', 'MA', 'MB', 'MBA', 'MC', 'MGA',
+       'MJR', 'MMJ', 'MP', 'MQ', 'PES', 'PM', 'PMA', 'RA', 'RAA', 'RD',
+       'RF', 'RL', 'RR', 'RRA', 'SF', 'SR', 'TC', 'TF', 'TV', 'VM', 'VO']
+
+CYBHi_short = ['AJR', 'ALM', 'AMA', 'ARL', 'ARS', 'AS', 'ASN', 'AV', 'CB',
+       'CC', 'CGP', 'CIB', 'CO', 'DPC', 'DS', 'DT', 'EP', 'ES', 'FAC',
+       'FC', 'GD', 'GFN', 'GM', 'HPS', 'IA', 'JC', 'JF', 'JG', 'JL',
+       'JMDA', 'JMF', 'JN', 'JS', 'JTA', 'JTP', 'JV', 'LCR', 'LDS', 'LGM',
+       'LR', 'LSM', 'MB', 'MC', 'MLS', 'MNM', 'MR', 'MRN', 'MVA', 'NF',
+       'NPS', 'PC', 'PLC', 'PLN', 'PME', 'RCN', 'RMAF', 'RN', 'RSB', 'SM',
+       'SMS', 'SS', 'TCO', 'TMM', 'VRR', 'XZ']
+
+# Convierte las listas en conjuntos
+conjunto1 = set(CYBHi)
+conjunto2 = set(CYBHi_short)
+
+# Encuentra los elementos repetidos
+elementos_repetidos = conjunto1.intersection(conjunto2)
+
+# Cuenta las repeticiones en la lista 2
+resultado = {}
+for elemento in elementos_repetidos:
+    resultado[elemento] = CYBHi_short.count(elemento)
+
+# Imprime los elementos repetidos y su cantidad de repeticiones
+for elemento, repeticiones in resultado.items():
+    print(f"Elemento {elemento}: {repeticiones} repeticiones")
+
+
+
+
+CYBHi_lst = ['AA', 'ABD', 'AC', 'ACA', 'AFS', 'AG', 'AJR', 'AL', 'ALM', 'AMA',
+       'AR', 'ARA', 'ARF', 'ARL', 'ARS', 'AS', 'ASN', 'AV', 'CB', 'CC',
+       'CF', 'CGP', 'CIB', 'CO', 'CSR', 'DB', 'DC', 'DPC', 'DS', 'DT',
+       'EP', 'ES', 'FAC', 'FC', 'FM', 'FO', 'FP', 'GD', 'GF', 'GFN', 'GM',
+       'HF', 'HPS', 'IA', 'IB', 'IC', 'JA', 'JB', 'JC', 'JCA', 'JCC',
+       'JF', 'JG', 'JL', 'JM', 'JMDA', 'JMF', 'JN', 'JP', 'JPA', 'JS',
+       'JSA', 'JTA', 'JTP', 'JV', 'LCR', 'LDS', 'LGM', 'LR', 'LSM', 'MA',
+       'MB', 'MBA', 'MC', 'MGA', 'MJR', 'MLS', 'MMJ', 'MNM', 'MP', 'MQ',
+       'MR', 'MRN', 'MVA', 'NF', 'NPS', 'PC', 'PES', 'PLC', 'PLN', 'PM',
+       'PMA', 'PME', 'RA', 'RAA', 'RCN', 'RD', 'RF', 'RL', 'RMAF', 'RN',
+       'RR', 'RRA', 'RSB', 'SF', 'SM', 'SMS', 'SR', 'SS', 'TC', 'TCO',
+       'TF', 'TMM', 'TV', 'VM', 'VO', 'VRR', 'XZ']
+
+
+
+
+
+
+
+
+
+
+feats = GetFeatures()
+feats.features('CYBHi_lst', CYBHi_lst)
 
