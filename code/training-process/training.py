@@ -6,10 +6,10 @@ import utils
 import transformerECG
 
 #Cargamos el dataset
-path_dataset = "Codigos/data/ready/pickles/ecgid_290.pickle"
+path_dataset = "/Users/victorrincon/Documents/Maestria/MISTI/Proyecto ECG/Codigos/data/ready/pickles/ecgid_290.pickle"
 y, x, people = utils.load_data(path_dataset)
 y, x = utils.shuffle_data(y, x)
-
+#/Users/victorrincon/Documents/Maestria/MISTI/Proyecto ECG/Codigos/data/ready/pickles
 #Definimos el input shape con la dimension de la señal
 SIG_DIMS = (x.shape[1], 1)
 print("Input Shape:", SIG_DIMS, "\n")
