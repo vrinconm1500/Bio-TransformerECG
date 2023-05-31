@@ -2,6 +2,7 @@ import utils
 from keras.models import  load_model
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import LabelBinarizer
+import numpy as np 
 
 #Cargamos el dataset
 path_dataset = "/Users/victorrincon/Documents/Maestria/MISTI/Proyecto ECG/Codigos/data/ready/pickles/CYBHi-1500.pickle"
