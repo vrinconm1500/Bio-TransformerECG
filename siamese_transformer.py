@@ -256,7 +256,7 @@ def step_decay(epoch):
 lr_decay = LearningRateScheduler(step_decay)
 
 
-LR = 0.01
+LR = 0.0001
 decay = LR/100
 adam = Adam(learning_rate=LR,decay=decay)
 
